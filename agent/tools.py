@@ -121,7 +121,16 @@ class RAGSearchTool:
             if top_k is None:
                 top_k = self.config.get('top_k', 5)
             
-            # Create query engine
+            # Create query engine with Ollama
+            from llama_index.core import Settings
+            from llama_index.llms.ollama import Ollama
+            
+            # Set Ollama as LLM for query engine
+            Settings.llm = Ollama(
+                model=config_loader.get('ollama.model'),
+                base_url=f"{config_loader.get('ollama.host')}:{config_loader.get('ollama.port')}"
+            )
+            
             query_engine = self.index.as_query_engine(
                 similarity_top_k=top_k,
                 response_mode="no_text"  # Return nodes only, not synthesized response

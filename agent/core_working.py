@@ -105,7 +105,7 @@ Assistant: """
             logger.info(f"User input: {user_input}")
             
             # Get conversation context
-            context = memory.get_context_string()
+            context = memory.get_context_string(include_system=False)
             
             # Check if user is asking about SQL/database
             is_db_query = any(word in user_input.lower() for word in [

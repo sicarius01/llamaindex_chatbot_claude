@@ -38,15 +38,73 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-### 3. Ollama 설정
+### 3. Ollama 서버 설정
 
+#### Ollama 설치
 ```bash
-# Ollama 모델 다운로드
-ollama pull qwen3:4b              # LLM 모델 (4GB)
-ollama pull nomic-embed-text      # 임베딩 모델 (300MB)
+# Windows
+# https://ollama.ai 에서 다운로드
 
-# Ollama 서버 시작
+# Linux/Mac
+curl -fsSL https://ollama.ai/install.sh | sh
+```
+
+#### Ollama 서버 시작
+```bash
+# 기본 포트(11434)로 시작
 ollama serve
+
+# 커스텀 포트로 시작
+OLLAMA_HOST=0.0.0.0:8080 ollama serve
+
+# 백그라운드 실행 (Linux/Mac)
+nohup ollama serve > ollama.log 2>&1 &
+```
+
+#### 모델 다운로드
+```bash
+# 추천 모델 (빠른 응답)
+ollama pull qwen2:0.5b           # 초경량 모델 (500MB, 빠름)
+ollama pull qwen3:4b             # 기본 모델 (4GB, 균형)
+
+# 임베딩 모델 (필수)
+ollama pull nomic-embed-text     # 임베딩용 (300MB)
+
+# 모델 확인
+ollama list
+```
+
+#### config.yaml에서 Ollama 서버 설정
+```yaml
+ollama:
+  host: "http://localhost"   # Ollama 서버 주소
+  port: 11434                # Ollama 서버 포트
+  model: "qwen3:4b"          # 사용할 LLM 모델
+  embedding_model: "nomic-embed-text"  # 임베딩 모델
+  temperature: 0.7           # 생성 온도 (0.0~1.0)
+  max_tokens: 2048           # 최대 토큰 수
+```
+
+#### 원격 Ollama 서버 사용
+```yaml
+# 다른 서버의 Ollama 사용 시
+ollama:
+  host: "http://192.168.1.100"  # 원격 서버 IP
+  port: 11434
+```
+
+#### Ollama 서버 상태 확인
+```bash
+# API 상태 확인
+curl http://localhost:11434/api/tags
+
+# 모델 목록 확인
+curl http://localhost:11434/api/tags | python -m json.tool
+
+# 모델 테스트
+curl -X POST http://localhost:11434/api/generate \
+  -d '{"model": "qwen3:4b", "prompt": "Hello", "stream": false}' \
+  -H "Content-Type: application/json"
 ```
 
 ### 4. 실행
@@ -196,11 +254,43 @@ sql:
 
 ### Ollama 연결 실패
 ```bash
-# Ollama 상태 확인
+# 1. Ollama 서버 실행 확인
+ps aux | grep ollama  # Linux/Mac
+tasklist | findstr ollama  # Windows
+
+# 2. 서버 재시작
+ollama serve
+
+# 3. 포트 확인 (기본: 11434)
+netstat -an | grep 11434  # Linux/Mac
+netstat -an | findstr 11434  # Windows
+
+# 4. API 테스트
 curl http://localhost:11434/api/tags
 
-# 모델 확인
-ollama list
+# 5. 방화벽 확인 (원격 서버 사용 시)
+```
+
+### Ollama 응답 속도 개선
+```bash
+# 더 작은 모델 사용
+ollama pull qwen2:0.5b  # 0.5B 파라미터
+ollama pull tinyllama    # 1.1B 파라미터
+
+# config.yaml 수정
+ollama:
+  model: "qwen2:0.5b"  # 빠른 모델로 변경
+```
+
+### 모델 다운로드 실패
+```bash
+# 디스크 공간 확인
+df -h  # Linux/Mac
+dir   # Windows
+
+# 모델 삭제 후 재다운로드
+ollama rm qwen3:4b
+ollama pull qwen3:4b
 ```
 
 ### ChromaDB 오류
