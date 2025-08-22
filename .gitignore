@@ -1,0 +1,106 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Project specific
+logs/
+*.log
+data/chroma_db/
+*.sqlite3
+*.db
+
+# Test
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+*.cover
+.hypothesis/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+*~
+temp/
+tmp/
+
+# Claude specific
+.claude/
+CLAUDE.md.backup
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Documentation build
+docs/_build/
+docs/_static/
+docs/_templates/
+
+# Cache
+.cache/
+*.cache
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Backup files
+*_backup.py
+*_old.py
+*.orig
+
+# Test outputs
+*.test.json
+*.test.txt
+
+# ChromaDB
+chroma.sqlite3
+*.wal
+*.shm
+
+# Model files (if stored locally)
+models/
+*.gguf
+*.bin
+
+# Config overrides (keep base config.yaml)
+config.local.yaml
+config.dev.yaml
+config.prod.yaml
+
+# Session data
+sessions/
+*.session
+
+# Misc
+nul
+.mypy_cache/
